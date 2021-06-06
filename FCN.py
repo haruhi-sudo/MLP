@@ -40,7 +40,7 @@ class FCN:
     
     def update(self, learning_rate):
         '''
-        使用梯度下降算法更新权重
+            使用梯度下降算法更新权重
         '''
         self.weights += learning_rate * self.d_weights
         self.bias += learning_rate * self.d_bias
@@ -70,11 +70,32 @@ class NetWork:
             delta = layer.delta
         return delta
 
-    def train(self, batch, learning_rate, epoch):
+    def train(self, one_batch_data, one_batch_label, learning_rate, epoch):
         for i in range(epoch):
-            for j in range(len(batch)):
-                self.predict(batch[j]['data'])
-                self.calc_gradient(batch[j]['label'])
+            for j in range(len(one_batch_data)):
+                self.predict(one_batch_data[j])
+                self.calc_gradient(one_batch_label[j])
                 
                 for layer in self.layers:
                     layer.update(learning_rate)
+
+class DataLoader:
+    def __init__(self, batch_size, dataset, labelset):
+        self.batch_size = batch_size
+        self.batch_data = []
+        self.batch_label = []
+
+        data_tmp = []
+        label_tmp = []
+
+        for i in range(len(dataset)):
+            data_tmp.append(dataset[i])
+            label_tmp.append(labelset[i])
+            if i % batch_size == batch_size - 1:
+                self.batch_data.append(data_tmp)
+                self.batch_label.append(label_tmp)
+                data_tmp = []
+                label_tmp = []
+        
+        self.batch_data.append(data_tmp)
+        self.batch_label.append(label_tmp)
