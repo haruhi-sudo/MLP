@@ -32,22 +32,26 @@ if __name__ == '__main__':
 
     net = NetWork([2, 10, 1], MSE()) # 构建神经网络，输入层2，隐藏层300，输出层1
     net.load_model()
-    epochs = 100000
-    learning_rate = 1
+    epochs = 1000000
+    learning_rate = 0.1
+    momentum = 0.1
     loss = 0
 
     for epoch in range(1, epochs):
         for i in range(len(train_data)):
-            net.train(one_batch_data=train_data[i], one_batch_label=train_label[i], learning_rate=learning_rate)
+            net.train(one_batch_data=train_data[i], one_batch_label=train_label[i], learning_rate=learning_rate, momentum=momentum)
         
         for i in range(len(val_data)):
-            loss = loss + net.evaluate(train_data=val_data[i], train_label=val_label[i])
+            loss = loss + net.evaluate(val_data=val_data[i], val_label=val_label[i])
 
         if(epoch % 100 == 0):
             print(loss/100)
             if(loss/100 < 0.01):
                 break
             loss = 0
+        
+        if(epoch % 1000 == 0):
+            net.save_model()
 
     net.save_model()
 
