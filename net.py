@@ -9,7 +9,7 @@ class NetWork:
         self.loss = loss # 损失函数
         for i in range(len(layers) - 2):
             self.layers.append(FCN(layers[i], layers[i+1], Sigmod()))
-            # self.layers.append(FCN(layers[i], layers[i+1], Sigmod()))
+            # self.layers.append(FCN(layers[i], layers[i+1], Relu()))
 
         self.layers.append(FCN(layers[i+1], layers[i+2], Sigmod()))
 
@@ -50,17 +50,17 @@ class NetWork:
         return np.sum([self.loss.forward(x, y) for (x, y) in test_result])
 
 
-    def save_model(self):
+    def save_model(self, path):
         for i in range(len(self.layers)):
-            np.savetxt('./model/weights' + str(i) + '.txt', self.layers[i].weights)
-            np.savetxt('./model/bias' + str(i) + '.txt', self.layers[i].bias)
+            np.savetxt(path + '/weights' + str(i) + '.txt', self.layers[i].weights)
+            np.savetxt(path + '/bias' + str(i) + '.txt', self.layers[i].bias)
 
 
-    def load_model(self):
+    def load_model(self, path):
         for i in range(len(self.layers)):
-            self.layers[i].weights = np.loadtxt('./model/weights' + str(i) + '.txt')\
+            self.layers[i].weights = np.loadtxt(path + '/weights' + str(i) + '.txt')\
                 .reshape(self.layers[i].output_size, self.layers[i].input_size)
-            self.layers[i].bias = np.loadtxt('./model/bias' + str(i) + '.txt')\
+            self.layers[i].bias = np.loadtxt(path + '/bias' + str(i) + '.txt')\
                 .reshape(self.layers[i].output_size, 1)
 
 

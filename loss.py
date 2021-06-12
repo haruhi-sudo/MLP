@@ -1,5 +1,3 @@
-import numpy as np
-
 class MSE:
     '''
         均方误差，输入真实值，目标值
