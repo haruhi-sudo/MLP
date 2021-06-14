@@ -25,8 +25,7 @@ class NetWork:
 
     def calc_gradient(self, label):
         # 输出层的误差
-        delta = - self.layers[-1].activator.backward(self.layers[-1].output)\
-             * self.loss.backward(self.layers[-1].output, label)
+        delta = - self.loss.backward(self.layers[-1].output, label)
         for layer in self.layers[::-1]:
             layer.backward(delta) # 将误差传递给隐藏层
             delta = layer.delta

@@ -3,7 +3,7 @@ import numpy as np
 
 class FCN:
     '''
-        全连接层的一层，准确来说是两层之间的参数
+        全连接层的一层
     '''
     def __init__(self, input_size, output_size, activator):
         self.input_size = input_size
@@ -36,7 +36,8 @@ class FCN:
             输入这一层的误差，计算梯度和下一层的误差
             关于什么是误差delta，可参考报告
         '''
-        self.delta = self.activator.backward(self.input) * np.dot(self.weights.T, delta) # 下一层的误差
+        delta = self.activator.backward(self.output) * delta
+        self.delta = np.dot(self.weights.T, delta) # 下一层的误差
         # 记录上一次的梯度，用于计算动量
         self.d_weights_old = self.d_weights
         self.d_bias_old = self.d_bias

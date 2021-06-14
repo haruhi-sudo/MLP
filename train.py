@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from net import NetWork, DataLoader
 from loss import MSE
 
@@ -31,32 +32,31 @@ if __name__ == '__main__':
     val_data, val_label = load_data(val_path)
 
 
-    net = NetWork([2, 10, 1], MSE()) # 构建神经网络，输入层2，隐藏层10，输出层1
+    net = NetWork([2, 10, 1], MSE()) # 创建神经网络，输入层2，隐藏层10，输出层1
 
-    epochs = 1000000
+    epochs = 100000
 
     trian_loss = 0
     val_loss = 0
-    val_loss_old = 1e9
 
+    starttime = time.time()
     for epoch in range(1, epochs):
         for i in range(len(train_data)):
-            net.train(one_batch_data=train_data[i], one_batch_label=train_label[i], learning_rate=0.1, momentum=0.9)
+            net.train(one_batch_data=train_data[i], one_batch_label=train_label[i], learning_rate=0.1, momentum=0.)
         
         trian_loss += calc_loss(data=train_data, label=train_label, net=net)
         val_loss += calc_loss(data=val_data, label=val_label, net=net)
 
         if(epoch % 100 == 0):
             print('train:{}    val:{}'.format(str(trian_loss/100), str(val_loss/100)))
-            if(val_loss_old <  val_loss and epoch > 1000):
-                break
+
             net.save_model('./model')
+            if (val_loss/100 < 0.01):
+                break
             trian_loss = 0
-            val_loss_old = val_loss
             val_loss = 0
 
-            with open('predict_res.txt', 'w') as f:
-                for i in range(len(val_data)):
-                    for j in range(len(val_data[i])):
-                        predict_res = net.predict(val_data[i][j])
-                        f.write(str(predict_res) + '\n')    
+    endtime = time.time()
+    dtime = endtime - starttime
+    print("程序运行时间：%.8s s" % dtime)
+    
