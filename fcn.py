@@ -38,13 +38,10 @@ class FCN:
         '''
         delta = self.activator.backward(self.output) * delta
         self.delta = np.dot(self.weights.T, delta) # 下一层的误差
-        # 记录上一次的梯度，用于计算动量
-        self.d_weights_old = self.d_weights
-        self.d_bias_old = self.d_bias
+        
+        self.d_weights = self.d_weights + np.dot(delta, self.input.T) # 计算weights梯度
+        self.d_bias = self.d_bias + delta # 计算bias梯度
 
-        self.d_weights =  np.dot(delta, self.input.T) # 计算weights梯度
-        self.d_bias = delta # 计算bias梯度
-    
 
     def update(self, learning_rate, momentum):
         '''

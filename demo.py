@@ -3,23 +3,27 @@ from mpl_toolkits.mplot3d import Axes3D #绘制3D坐标的函数
 import numpy as np  
 from net import NetWork, DataLoader
 from loss import MSE
+from activator import Sigmod, Relu, Linear
 
-def fun(x,y,a,b,c,d):  
-    return a*np.sin(b*x) + c* np.cos(d*y)  
+def fun(x,y,a=5,b=5,c=5,d=5):  
+    return a*np.sin(b*x) + c* np.cos(d*y)
 
 
 if __name__ == '__main__':
+    _min = -10
+    _range = 20
 
-    net = NetWork([2, 10, 1], MSE()) # 构建神经网络，输入层2，隐藏层10，输出层1
-    net.load_model('./model_5_3')
+
+    net = NetWork(layers=[2, 10, 1], activators=[Sigmod(),Sigmod()],\
+         loss=MSE()) # 创建神经网络，输入层2，隐藏层10，输出层1
+    
+    net.load_model('./model')
     
 
     X=np.arange(-1,1,0.1)  
     Y=np.arange(-1,1,0.1)
     X,Y=np.meshgrid(X,Y)
-    Z2=fun(X,Y, 5, 3, 5, 3)
-    _min = -10
-    _range = 20
+    Z2=fun(X,Y)
 
     Z = np.zeros([20, 20])
     
@@ -39,3 +43,4 @@ if __name__ == '__main__':
     ax.set_ylabel('y label', color='g')  
     ax.set_zlabel('z label', color='b')
     plt.show() 
+

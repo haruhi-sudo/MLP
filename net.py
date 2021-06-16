@@ -4,14 +4,13 @@ from activator import Sigmod, Relu, Linear
 
 
 class NetWork:
-    def __init__(self, layers, loss):
+    def __init__(self, layers, activators, loss):
         self.layers = []
         self.loss = loss # 损失函数
         for i in range(len(layers) - 2):
-            self.layers.append(FCN(layers[i], layers[i+1], Sigmod()))
-            # self.layers.append(FCN(layers[i], layers[i+1], Relu()))
+            self.layers.append(FCN(layers[i], layers[i+1], activators[i]))
 
-        self.layers.append(FCN(layers[i+1], layers[i+2], Sigmod()))
+        self.layers.append(FCN(layers[i+1], layers[i+2], activators[i+1]))
 
 
     def predict(self, predict_data):
@@ -32,13 +31,26 @@ class NetWork:
         return delta
 
 
+    def zero_gradient(self):
+        for layer in self.layers[::-1]:
+            # 记录上一次的梯度，用于计算动量
+            layer.d_weights_old = layer.d_weights
+            layer.d_bias_old = layer.d_bias
+
+            layer.d_bias = 0
+            layer.d_weights = 0
+            
+
     def train(self, one_batch_data, one_batch_label, learning_rate, momentum):
-        for j in range(len(one_batch_data)):
-            self.predict(one_batch_data[j])
-            self.calc_gradient(one_batch_label[j])
+        self.zero_gradient()
+        # 合的导数等于导数的和
+        for i in range(len(one_batch_data)):
+        
+            self.predict(one_batch_data[i])
+            self.calc_gradient(one_batch_label[i])
                 
-            for layer in self.layers:
-                layer.update(learning_rate, momentum)
+        for layer in self.layers:
+            layer.update(learning_rate, momentum)
 
 
     def evaluate(self, val_data, val_label):
@@ -88,3 +100,4 @@ class DataLoader:
         
         if len(label_tmp) != 0:
             self.batch_label.append(label_tmp)
+
