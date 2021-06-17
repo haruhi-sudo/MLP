@@ -5,7 +5,7 @@ from loss import MSE
 from activator import Sigmod, Relu, Linear
 
 # 使用DataLoader，将数据加载入batch
-def load_data(path, batch_size=10):
+def load_data(path, batch_size=1):
     data = []
     label = []
     with open(path,'r') as f:

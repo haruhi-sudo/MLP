@@ -5,8 +5,8 @@ from net import NetWork, DataLoader
 from loss import MSE
 from activator import Sigmod, Relu, Linear
 
-def fun(x,y,a=5,b=5,c=5,d=5):  
-    return a*np.sin(b*x) + c* np.cos(d*y)
+def fun(x,y,a=5,b=3,c=5,d=3):  
+    return a*np.sin(b*x) + c* np.cos(d*y) - 10
 
 
 if __name__ == '__main__':
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     net = NetWork(layers=[2, 10, 1], activators=[Sigmod(),Sigmod()],\
          loss=MSE()) # 创建神经网络，输入层2，隐藏层10，输出层1
     
-    net.load_model('./model')
+    net.load_model('./model_5_3')
     
 
     X=np.arange(-1,1,0.1)  

@@ -1,3 +1,5 @@
+import numpy as np
+
 class MSE:
     '''
         均方误差，输入真实值，目标值
@@ -10,8 +12,11 @@ class MSE:
 
 
 class CE:
+    '''
+        交叉熵
+    '''
     def forward(self, output, target):
-        return target * np.log(output + 1e-10) + (1 - target) * np.log(1 - output + 1e-10)
+        return - target * np.log(output + 1e-10) - (1 - target) * np.log(1 - output + 1e-10)
 
     def backward(self, output, target):
-        return target * 1. / (output + 1e-10) + (target - 1) * 1. / (1 - output + 1e-10)
+        return - target * 1. / (output + 1e-10) - (target - 1) * 1. / (1 - output + 1e-10)
