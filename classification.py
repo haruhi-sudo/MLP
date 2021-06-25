@@ -3,7 +3,7 @@ import PIL.Image as Image
 import os
 from net import NetWork, DataLoader
 from loss import CE
-from activator import Sigmod, Relu, SoftMax
+from activator import Sigmod, Relu
 
 # 控制图片大小
 ex_height = 320 // 30
@@ -14,7 +14,7 @@ def centralization(images, height = 320, width = 243):
     '''
         images是图片集合（矩阵集合）
         d是图片拉伸后的维度
-        输出中心化后的矩阵central_vectors和平均值
+        输出中心化后的矩阵central_vectors
     '''
     n = len(images) # n是图片个数
     d = height * width
@@ -68,7 +68,7 @@ def accuracy(data, label, net):
             if np.argmax(label[i][j]) == np.argmax(predict_result):
                 correct += 1
     
-    print('预测正确率：{}'.format(correct))
+    print('预测正确个数：{}'.format(correct))
     print(' ')
     return correct / len(predict_result)
 
@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
     trian_loss = 0
     val_loss = 0
+    val_loss_old = 1e9
 
-    net.load_model('./model_images')
 
     for epoch in range(1, epochs):
         for i in range(len(train_images)):
@@ -103,9 +103,13 @@ if __name__ == '__main__':
         
         if(epoch % 100 == 0):
             print('train:{}    val:{}'.format(str(trian_loss/100), str(val_loss/100)))
-            accuracy(data=val_images, label=val_labels, net=net)
-            net.save_model('./model_images_2')
-            if (val_loss/100 < 0.001):
+            
+            if(val_loss_old <  val_loss and epoch > 10000):
                 break
+            accuracy(data=val_images, label=val_labels, net=net)
+
+            net.save_model('./model_images_2')
+
             trian_loss = 0
-            val_loss = 0 
+            val_loss_old = val_loss
+            val_loss = 0

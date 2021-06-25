@@ -1,6 +1,6 @@
 import numpy as np
 from fcn import FCN
-from activator import Sigmod, Relu, SoftMax, Linear
+from activator import Sigmod, Relu, Linear
 
 
 class NetWork:

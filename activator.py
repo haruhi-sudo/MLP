@@ -26,19 +26,19 @@ class Linear:
     def backward(self, y):
         return np.ones(y.shape)
 
-class SoftMax:
-    def forward(self, x):
-        x = x - np.max(x)
-        return np.exp(x) / np.sum(np.exp(x))
+# class SoftMax:
+#     def forward(self, x):
+#         x = x - np.max(x)
+#         return np.exp(x) / np.sum(np.exp(x))
 
-    def backward(self, y):
-        res = np.zeros(y.shape)
+#     def backward(self, y):
+#         res = np.zeros(y.shape)
 
-        for i in range(y.shape[0]):
-            for j in range(y.shape[0]):
-                if i == j:
-                    res[i] += (y[j] * (1 - y[j]))
-                else:
-                    res[i] += (- y[i] * y[j])
+#         for i in range(y.shape[0]):
+#             for j in range(y.shape[0]):
+#                 if i == j:
+#                     res[i] += (y[j] * (1 - y[j]))
+#                 else:
+#                     res[i] += (- y[i] * y[j])
 
-        return res
+#         return res
